@@ -18,6 +18,9 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Test with Git only
+        loginWithWebService("ckcc", "123");
     }
 
     public void onLoginButtonClick(View view){
@@ -42,6 +45,10 @@ public class LoginActivity extends Activity {
             alertDialog.show();
         }
 
+    }
+
+    private void loginWithWebService(String username, String password){
+        // Do any thing...
     }
 
 }
