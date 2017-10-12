@@ -19,8 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.NewsActivity"></activity>
+        <activity android:name=".activity.NewsActivity" />
         <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.ArticleDetailActivity"></activity>
     </application>
 
 </manifest>

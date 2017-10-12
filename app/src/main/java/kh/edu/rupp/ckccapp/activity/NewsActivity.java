@@ -1,5 +1,6 @@
 package kh.edu.rupp.ckccapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -25,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import kh.edu.rupp.ckccapp.R;
+import kh.edu.rupp.ckccapp.model.App;
 import kh.edu.rupp.ckccapp.model.Article;
 
 public class NewsActivity extends AppCompatActivity {
@@ -51,9 +54,12 @@ public class NewsActivity extends AppCompatActivity {
         articleAdapter = new ArticleAdapter();
         rclNews.setAdapter(articleAdapter);
 
-
-        loadArticlesFromServer();
-
+        if(App.getInstance(this).getArticles() == null){
+            loadArticlesFromServer();
+        }else{
+            Article[] articles = App.getInstance(this).getArticles();
+            articleAdapter.setArticles(articles);
+        }
     }
 
     @Override
@@ -81,14 +87,19 @@ public class NewsActivity extends AppCompatActivity {
                         JSONObject articleJson = response.getJSONObject(i);
                         int id = articleJson.getInt("_id");
                         String title = articleJson.getString("_title");
-                        Article article = new Article(title, 0, "");
+                        String imageUrl = articleJson.getString("_image_url");
+                        Article article = new Article(title, 0, imageUrl);
                         articles[i] = article;
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                // Pass data to adapter for displaying
                 articleAdapter.setArticles(articles);
+                // Save data to Singleton for using later
+                App.getInstance(NewsActivity.this).setArticles(articles);
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -108,14 +119,29 @@ public class NewsActivity extends AppCompatActivity {
 
         TextView txtTitle;
         TextView txtDate;
-        ImageView imgArticle;
+        NetworkImageView imgArticle;
 
         public ArticleViewHolder(View itemView) {
             super(itemView);
 
             txtTitle = (TextView)itemView.findViewById(R.id.txt_title);
             txtDate = (TextView)itemView.findViewById(R.id.txt_date);
-            imgArticle = (ImageView)itemView.findViewById(R.id.img_article);
+            imgArticle = (NetworkImageView)itemView.findViewById(R.id.img_article);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Article article = articleAdapter.getArticles()[position];
+                    Intent intent = new Intent(NewsActivity.this, ArticleDetailActivity.class);
+                    /*
+                    intent.putExtra("title", article.getTitle());
+                    intent.putExtra("image_url", article.getImageUrl());
+                    */
+                    Global.selectedArticle = article;
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -132,6 +158,10 @@ public class NewsActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
+        public Article[] getArticles() {
+            return articles;
+        }
+
         @Override
         public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(NewsActivity.this).inflate(R.layout.viewholder_article, parent, false);
@@ -143,6 +173,12 @@ public class NewsActivity extends AppCompatActivity {
         public void onBindViewHolder(ArticleViewHolder holder, int position) {
             Article article = articles[position];
             holder.txtTitle.setText(article.getTitle());
+
+            // Display image using NetworkImageView
+            ImageLoader imageLoader = App.getInstance(NewsActivity.this).getImageLoader();
+            holder.imgArticle.setDefaultImageResId(R.drawable.img_default_image);
+            holder.imgArticle.setErrorImageResId(R.drawable.ic_error_image);
+            holder.imgArticle.setImageUrl(article.getImageUrl(), imageLoader);
         }
 
         @Override

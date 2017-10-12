@@ -1,6 +1,7 @@
 package kh.edu.rupp.ckccapp.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,8 +11,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import kh.edu.rupp.ckccapp.R;
+import kh.edu.rupp.ckccapp.model.App;
 
 /**
  * CKCCApp
@@ -19,6 +29,8 @@ import kh.edu.rupp.ckccapp.R;
  */
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
 
         // Add listener to NavigationView
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_main);
+        navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
+
+        displayProfileImage();
 
     }
 
@@ -49,8 +63,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(item.getItemId() == R.id.mnu_news){
             Intent newsIntent = new Intent(this, NewsActivity.class);
             startActivity(newsIntent);
+        } else if(item.getItemId() == R.id.mnu_profile){
+            Intent newsIntent = new Intent(this, ProfileActivity.class);
+            startActivity(newsIntent);
         }
 
         return false;
     }
+
+    private void displayProfileImage(){
+        String profileImageUrl = "http://10.0.2.2/file/image/profile.jpg";
+        ImageRequest request = new ImageRequest(profileImageUrl, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                View navigationHeader = navigationView.getHeaderView(0);
+                CircleImageView imgProfile = (CircleImageView) navigationHeader.findViewById(R.id.img_profile);
+                imgProfile.setImageBitmap(response);
+            }
+        }, 256, 256, ImageView.ScaleType.FIT_XY, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error while loading image from Server", Toast.LENGTH_LONG).show();
+            }
+        });
+        App.getInstance(this).addRequest(request);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
