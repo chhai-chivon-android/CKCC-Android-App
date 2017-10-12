@@ -1,5 +1,7 @@
 package kh.edu.rupp.ckccapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * CKCCApp
  * Created by leapkh on 12/9/17.
@@ -7,13 +9,18 @@ package kh.edu.rupp.ckccapp.model;
 
 public class Article {
 
+    @SerializedName("_title")
     private String title;
-    private long date;
+
+    //@SerializedName("_date")
+    //private long date;
+
+    @SerializedName("_image_url")
     private String imageUrl;
 
     public Article(String title, long date, String imageUrl) {
         this.title = title;
-        this.date = date;
+        //this.date = date;
         this.imageUrl = imageUrl;
     }
 
@@ -25,13 +32,6 @@ public class Article {
         this.title = title;
     }
 
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
-    }
 
     public String getImageUrl() {
         return imageUrl;

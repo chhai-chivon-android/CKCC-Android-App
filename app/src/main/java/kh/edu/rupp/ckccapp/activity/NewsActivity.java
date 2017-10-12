@@ -18,13 +18,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import kh.edu.rupp.ckccapp.R;
 import kh.edu.rupp.ckccapp.model.App;
@@ -77,6 +74,24 @@ public class NewsActivity extends AppCompatActivity {
         //String url = "http://10.0.2.2/test/ckcc-api/news.php";
         String url = "http://test.js-cambodia.com/ckcc/news.json";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest articlesRequest = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Article[] articles = gson.fromJson(response, Article[].class);
+                // Pass data to adapter for displaying
+                articleAdapter.setArticles(articles);
+                // Save data to Singleton for using later
+                App.getInstance(NewsActivity.this).setArticles(articles);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(NewsActivity.this, "Error while loading articles from server", Toast.LENGTH_LONG).show();
+                Log.d("ckcc", "Load article error: " + error.getMessage());
+            }
+        });
+        /*
         JsonArrayRequest articlesRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -108,6 +123,7 @@ public class NewsActivity extends AppCompatActivity {
                 Log.d("ckcc", "Load article error: " + error.getMessage());
             }
         });
+        */
         requestQueue.add(articlesRequest);
     }
 
