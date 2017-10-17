@@ -19,9 +19,9 @@
         android:id="@+id/etxt_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ckcc"
         android:layout_margin="10dp"
-        android:hint="Username" />
+        android:hint="Username"
+        android:text="ckcc" />
 
     <EditText
         android:id="@+id/etxt_password"
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:hint="Password"
-        android:text="123"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="123" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -39,9 +39,16 @@
         android:text="Remember Me" />
 
     <Button
+        android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onLoginButtonClick"
         android:text="Login" />
+
+    <ProgressBar
+        android:id="@+id/pgr_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </LinearLayout>
