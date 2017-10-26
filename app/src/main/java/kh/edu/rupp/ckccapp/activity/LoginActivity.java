@@ -21,6 +21,8 @@ import java.util.Map;
 
 import kh.edu.rupp.ckccapp.R;
 import kh.edu.rupp.ckccapp.model.App;
+import kh.edu.rupp.ckccapp.model.DbManager;
+import kh.edu.rupp.ckccapp.model.LoginHistory;
 import kh.edu.rupp.ckccapp.model.UserResponse;
 
 public class LoginActivity extends Activity {
@@ -33,8 +35,8 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btnLogin = (Button)findViewById(R.id.btn_login);
-        pgrLoading = (ProgressBar)findViewById(R.id.pgr_loading);
+        btnLogin = (Button) findViewById(R.id.btn_login);
+        pgrLoading = (ProgressBar) findViewById(R.id.pgr_loading);
 
     }
 
@@ -74,6 +76,15 @@ public class LoginActivity extends Activity {
                     startActivity(intent);
                     finish();
                 }
+
+                // Insert login history
+                long currentTime = System.currentTimeMillis();
+                boolean isSuccess = (userResponse.code == 0);
+                LoginHistory history = new LoginHistory(0, inputUsername, currentTime, isSuccess);
+
+                DbManager dbManager = new DbManager(LoginActivity.this);
+                dbManager.insertLoginHistory(history);
+
             }
         }, new Response.ErrorListener() {
             @Override
