@@ -50,7 +50,8 @@ public class LoginActivity extends Activity {
         final String inputPassword = etxtPassword.getText().toString();
 
         // Send username and password to Web Service
-        String loginUrl = "http://10.0.2.2/test/ckcc-api/login.php";
+        //String loginUrl = "http://10.0.2.2/test/ckcc-api/login.php";
+        String loginUrl = "http://test.js-cambodia.com/ckcc/login.php";
         StringRequest request = new StringRequest(Request.Method.POST, loginUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

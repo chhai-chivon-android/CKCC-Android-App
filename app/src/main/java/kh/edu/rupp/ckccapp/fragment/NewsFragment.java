@@ -1,14 +1,13 @@
-package kh.edu.rupp.ckccapp.activity;
+package kh.edu.rupp.ckccapp.fragment;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,56 +23,48 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import kh.edu.rupp.ckccapp.R;
+import kh.edu.rupp.ckccapp.activity.ArticleDetailActivity;
 import kh.edu.rupp.ckccapp.model.App;
 import kh.edu.rupp.ckccapp.model.Article;
 
-public class NewsActivity extends AppCompatActivity {
+/**
+ * CKCCApp
+ * Created by leapkh on 10/24/17.
+ */
+
+public class NewsFragment extends Fragment {
 
     private RecyclerView rclNews;
     private ArticleAdapter articleAdapter;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
 
-        // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tlb_main);
-        setSupportActionBar(toolbar);
-        setTitle("News");
-        // Show back button on toolbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        rclNews = (RecyclerView)findViewById(R.id.rcl_news);
-        rclNews.setLayoutManager(new LinearLayoutManager(this));
+        rclNews = (RecyclerView)rootView.findViewById(R.id.rcl_news);
+        rclNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         articleAdapter = new ArticleAdapter();
         rclNews.setAdapter(articleAdapter);
 
-        if(App.getInstance(this).getArticles() == null){
+        if(App.getInstance(getActivity()).getArticles() == null){
             loadArticlesFromServer();
         }else{
-            Article[] articles = App.getInstance(this).getArticles();
+            Article[] articles = App.getInstance(getActivity()).getArticles();
             articleAdapter.setArticles(articles);
         }
+
+        return rootView;
+
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private void loadArticlesFromServer(){
         //String url = "http://10.0.2.2/test/ckcc-api/news.php";
-        String url = "http://test.js-cambodia.com/ckcc/news.json";
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "http://test.js-cambodia.com/ckcc/articles.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         StringRequest articlesRequest = new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -82,12 +73,12 @@ public class NewsActivity extends AppCompatActivity {
                 // Pass data to adapter for displaying
                 articleAdapter.setArticles(articles);
                 // Save data to Singleton for using later
-                App.getInstance(NewsActivity.this).setArticles(articles);
+                App.getInstance(getActivity()).setArticles(articles);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(NewsActivity.this, "Error while loading articles from server", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error while loading articles from server", Toast.LENGTH_LONG).show();
                 Log.d("ckcc", "Load article error: " + error.getMessage());
             }
         });
@@ -127,9 +118,6 @@ public class NewsActivity extends AppCompatActivity {
         requestQueue.add(articlesRequest);
     }
 
-
-
-
     // Article Adapter
     class ArticleViewHolder extends RecyclerView.ViewHolder {
 
@@ -149,12 +137,12 @@ public class NewsActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     Article article = articleAdapter.getArticles()[position];
-                    Intent intent = new Intent(NewsActivity.this, ArticleDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
                     /*
                     intent.putExtra("title", article.getTitle());
                     intent.putExtra("image_url", article.getImageUrl());
                     */
-                    Global.selectedArticle = article;
+                    //Global.selectedArticle = article;
                     startActivity(intent);
                 }
             });
@@ -180,7 +168,7 @@ public class NewsActivity extends AppCompatActivity {
 
         @Override
         public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(NewsActivity.this).inflate(R.layout.viewholder_article, parent, false);
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.viewholder_article, parent, false);
             ArticleViewHolder articleViewHolder = new ArticleViewHolder(view);
             return articleViewHolder;
         }
@@ -191,7 +179,7 @@ public class NewsActivity extends AppCompatActivity {
             holder.txtTitle.setText(article.getTitle());
 
             // Display image using NetworkImageView
-            ImageLoader imageLoader = App.getInstance(NewsActivity.this).getImageLoader();
+            ImageLoader imageLoader = App.getInstance(getActivity()).getImageLoader();
             holder.imgArticle.setDefaultImageResId(R.drawable.img_default_image);
             holder.imgArticle.setErrorImageResId(R.drawable.ic_error_image);
             holder.imgArticle.setImageUrl(article.getImageUrl(), imageLoader);
@@ -202,6 +190,5 @@ public class NewsActivity extends AppCompatActivity {
             return articles.length;
         }
     }
-
 
 }

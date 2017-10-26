@@ -1,6 +1,7 @@
 package kh.edu.rupp.ckccapp.activity;
 
-import android.content.Intent;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,8 @@ import com.android.volley.toolbox.ImageRequest;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kh.edu.rupp.ckccapp.R;
+import kh.edu.rupp.ckccapp.fragment.NewsFragment;
+import kh.edu.rupp.ckccapp.fragment.ProfileFragment;
 import kh.edu.rupp.ckccapp.model.App;
 
 /**
@@ -31,6 +34,7 @@ import kh.edu.rupp.ckccapp.model.App;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setTitle("CKCC Mobile App");
 
         // Add actionbar drawer toggle
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.lyt_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.lyt_drawer);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
@@ -55,24 +59,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         displayProfileImage();
 
+        onNewsClick();
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId() == R.id.mnu_news){
-            Intent newsIntent = new Intent(this, NewsActivity.class);
-            startActivity(newsIntent);
-        } else if(item.getItemId() == R.id.mnu_profile){
-            Intent newsIntent = new Intent(this, ProfileActivity.class);
-            startActivity(newsIntent);
+        if (item.getItemId() == R.id.mnu_news) {
+            onNewsClick();
+            return true;
+        } else if (item.getItemId() == R.id.mnu_profile) {
+            onProfileClick();
+            return true;
         }
 
         return false;
     }
 
-    private void displayProfileImage(){
-        String profileImageUrl = "http://10.0.2.2/file/image/profile.jpg";
+    private void displayProfileImage() {
+        //String profileImageUrl = "http://10.0.2.2/file/image/profile.jpg";
+        String profileImageUrl = "http://test.js-cambodia.com/ckcc/image/profile.png";
         ImageRequest request = new ImageRequest(profileImageUrl, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
@@ -87,6 +94,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         App.getInstance(this).addRequest(request);
+    }
+
+    private void onNewsClick() {
+        // Close drawer
+        drawerLayout.closeDrawers();
+
+        // Initalize NewsFragment
+        NewsFragment newsFragment = new NewsFragment();
+
+        // Replace NewsFragment in container
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.lyt_content, newsFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void onProfileClick(){
+        // Close drawer
+        drawerLayout.closeDrawers();
+
+        // Initalize NewsFragment
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        // Replace NewsFragment in container
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.lyt_content, profileFragment);
+        fragmentTransaction.commit();
     }
 
 }

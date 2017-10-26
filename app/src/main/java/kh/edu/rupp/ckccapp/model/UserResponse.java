@@ -24,7 +24,7 @@ public class UserResponse {
     @SerializedName("_username")
     public String username;
 
-    @SerializedName("_profile_image")
+    @SerializedName("_profile_image_url")
     public String profileImage;
 
     @SerializedName("_token")

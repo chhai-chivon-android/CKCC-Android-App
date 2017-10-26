@@ -3,22 +3,27 @@
 
     <item
         android:id="@+id/mnu_news"
+        android:checkable="true"
         android:icon="@drawable/ic_news"
         android:title="News" />
     <item
         android:id="@+id/mnu_training_courses"
+        android:checkable="true"
         android:icon="@drawable/ic_training_course"
         android:title="Training Courses" />
     <item
         android:id="@+id/mnu_video_tutorial"
+        android:checkable="true"
         android:icon="@drawable/ic_video_tutorial"
         android:title="Video Tutorial" />
     <item
         android:id="@+id/mnu_profile"
+        android:checkable="true"
         android:icon="@drawable/ic_profile"
         android:title="Profile" />
     <item
         android:id="@+id/mnu_settings"
+        android:checkable="true"
         android:icon="@drawable/ic_setting"
         android:title="Setting" />
 

@@ -1,11 +1,9 @@
 package kh.edu.rupp.ckccapp.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
 
 import kh.edu.rupp.ckccapp.R;
-import kh.edu.rupp.ckccapp.model.Article;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 
@@ -18,7 +16,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra("title");
         String imageUrl = getIntent().getStringExtra("image_url");
         */
-        Article article = Global.selectedArticle;
-        Toast.makeText(this, article.getTitle(), Toast.LENGTH_LONG).show();
+        //Article article = Global.selectedArticle;
+        //Toast.makeText(this, article.getTitle(), Toast.LENGTH_LONG).show();
     }
 }
