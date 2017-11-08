@@ -3,4 +3,12 @@
     <string name="open">បើក</string>
     <string name="close">Close</string>
     <string name="cancel">បោះបង់</string>
+
+    <string name="google_map_api_key">AIzaSyAUM8y6tECy-7IKHwU63uEvspiLb-y22EU</string>
+
+    <string name="ckcc_contact">The Royal University of Phnom Penh, Russian Federation Boulevard
+Toul Kork, Phnom Penh, Cambodia.
+\n\nTel: 855-23-999-494 Fax: 855-23-999 495
+\nEmail: info.ckcc@rupp.edu.kh</string>
+
 </resources>

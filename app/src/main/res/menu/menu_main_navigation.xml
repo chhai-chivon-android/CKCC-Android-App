@@ -27,4 +27,10 @@
         android:icon="@drawable/ic_setting"
         android:title="Setting" />
 
+    <item
+        android:id="@+id/mnu_contact"
+        android:checkable="true"
+        android:icon="@drawable/ic_contact"
+        android:title="Contact" />
+
 </menu>

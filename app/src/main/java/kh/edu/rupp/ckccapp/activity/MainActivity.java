@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageRequest;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kh.edu.rupp.ckccapp.R;
+import kh.edu.rupp.ckccapp.fragment.ContactFragment;
 import kh.edu.rupp.ckccapp.fragment.NewsFragment;
 import kh.edu.rupp.ckccapp.fragment.ProfileFragment;
 import kh.edu.rupp.ckccapp.model.App;
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.mnu_profile) {
             onProfileClick();
             return true;
+        } else if (item.getItemId() == R.id.mnu_contact) {
+            onContactClick();
+            return true;
         }
 
         return false;
@@ -121,6 +125,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.lyt_content, profileFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void onContactClick(){
+        // Close drawer
+        drawerLayout.closeDrawers();
+
+        // Initalize NewsFragment
+        ContactFragment contactFragment = new ContactFragment();
+
+        // Replace NewsFragment in container
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.lyt_content, contactFragment);
         fragmentTransaction.commit();
     }
 
