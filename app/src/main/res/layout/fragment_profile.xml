@@ -19,6 +19,7 @@
             android:src="@drawable/ic_profile" />
 
         <TextView
+            android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sok Sao" />
@@ -54,7 +55,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Birthday" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Place of birth" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -67,6 +75,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txt_gender"
                     android:text="Male" />
 
                 <TextView
@@ -77,12 +86,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txt_email"
                     android:text="soksao@gmail.com" />
 
                 <TextView
                     android:layout_width="wrap_content"
+                    android:id="@+id/txt_birthday"
+                    android:layout_height="wrap_content"
+                    android:text="1/1/1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/txt_hometown"
                     android:layout_height="wrap_content"
                     android:text="Phnom Penh" />
+
             </LinearLayout>
         </LinearLayout>
 

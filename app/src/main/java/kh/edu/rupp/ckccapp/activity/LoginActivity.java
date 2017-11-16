@@ -4,16 +4,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -25,19 +35,55 @@ import kh.edu.rupp.ckccapp.model.DbManager;
 import kh.edu.rupp.ckccapp.model.LoginHistory;
 import kh.edu.rupp.ckccapp.model.UserResponse;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements FacebookCallback<LoginResult> {
 
+    private LoginButton btnFacebookLogin;
     private Button btnLogin;
     private ProgressBar pgrLoading;
+
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.sdkInitialize(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Check if user is already logged in
+                if(AccessToken.getCurrentAccessToken() != null){
+                    Log.d("ckcc", "User is already logged in");
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }else{
+                    Log.d("ckcc", "User not yet log in");
+                }
+            }
+        }, 500);
+
+
         setContentView(R.layout.activity_login);
 
         btnLogin = (Button) findViewById(R.id.btn_login);
         pgrLoading = (ProgressBar) findViewById(R.id.pgr_loading);
 
+        btnFacebookLogin = (LoginButton)findViewById(R.id.btn_facebook_login);
+        btnFacebookLogin.setReadPermissions("email", "user_birthday", "user_hometown");
+
+        callbackManager = CallbackManager.Factory.create();
+        btnFacebookLogin.registerCallback(callbackManager, this);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onLoginButtonClick(View view) {
@@ -103,4 +149,20 @@ public class LoginActivity extends Activity {
         App.getInstance(this).addRequest(request);
     }
 
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onCancel() {
+        Toast.makeText(this, "Login cancel", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        Toast.makeText(this, "Login error", Toast.LENGTH_LONG).show();
+    }
 }
