@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,13 +17,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -35,7 +40,7 @@ import kh.edu.rupp.ckccapp.model.DbManager;
 import kh.edu.rupp.ckccapp.model.LoginHistory;
 import kh.edu.rupp.ckccapp.model.UserResponse;
 
-public class LoginActivity extends Activity implements FacebookCallback<LoginResult> {
+public class LoginActivity extends Activity implements FacebookCallback<LoginResult>, OnCompleteListener<AuthResult> {
 
     private LoginButton btnFacebookLogin;
     private Button btnLogin;
@@ -43,39 +48,36 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
     private CallbackManager callbackManager;
 
+    private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(this);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Check if user is already logged in
-                if(AccessToken.getCurrentAccessToken() != null){
-                    Log.d("ckcc", "User is already logged in");
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }else{
-                    Log.d("ckcc", "User not yet log in");
-                }
-            }
-        }, 500);
-
+        // Check if user is already logged in
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         setContentView(R.layout.activity_login);
 
         btnLogin = (Button) findViewById(R.id.btn_login);
         pgrLoading = (ProgressBar) findViewById(R.id.pgr_loading);
 
+        // Facebook authentication
         btnFacebookLogin = (LoginButton)findViewById(R.id.btn_facebook_login);
         btnFacebookLogin.setReadPermissions("email", "user_birthday", "user_hometown");
 
         callbackManager = CallbackManager.Factory.create();
         btnFacebookLogin.registerCallback(callbackManager, this);
+
+        // Firebase authentication
+        firebaseAuth = FirebaseAuth.getInstance();
+
 
     }
 
@@ -151,9 +153,9 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        // Pass Facebook token to Firebase auth object
+        AuthCredential authCredential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this);
     }
 
     @Override
@@ -164,5 +166,18 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
     @Override
     public void onError(FacebookException error) {
         Toast.makeText(this, "Login error", Toast.LENGTH_LONG).show();
+        Log.d("ckcc", "Facebook login error: " + error.getMessage());
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<AuthResult> task) {
+        if(task.isSuccessful()){
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Toast.makeText(this, "Login error", Toast.LENGTH_LONG).show();
+            Log.d("ckcc", "Firebaase auth error: " + task.getException());
+        }
     }
 }

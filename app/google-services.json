@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "950223910891",
+    "firebase_url": "https://ckccapp-de48b.firebaseio.com",
+    "project_id": "ckccapp-de48b",
+    "storage_bucket": "ckccapp-de48b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950223910891:android:364bdb7e18d6b359",
+        "android_client_info": {
+          "package_name": "kh.edu.rupp.ckccapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950223910891-raq5q38718791llmdp04kpacd6993103.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRYjfmeHM6XevW62rK-YhzeCX6Aeubpek"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

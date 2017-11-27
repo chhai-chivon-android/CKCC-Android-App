@@ -2,6 +2,7 @@ package kh.edu.rupp.ckccapp.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,11 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.RemoteMessage;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kh.edu.rupp.ckccapp.R;
@@ -32,7 +37,7 @@ import kh.edu.rupp.ckccapp.model.App;
  * Created by leapkh on 24/8/17.
  */
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -57,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Add listener to NavigationView
         navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Add listener to Logout button
+        TextView txtLogout = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_logout);
+        txtLogout.setOnClickListener(this);
 
         displayProfileImage();
 
@@ -140,6 +149,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.lyt_content, contactFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.txt_logout){
+            // Logout from Facebook
+            LoginManager.getInstance().logOut();
+
+            // Logout from Firebase
+            FirebaseAuth.getInstance().signOut();
+
+            // Start login activity and finish main activity
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void sendMessage(){
+        Bundle bundle = null;
+        RemoteMessage.Builder builder = new RemoteMessage.Builder("hello");
+
     }
 
 }
