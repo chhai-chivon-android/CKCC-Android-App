@@ -36,6 +36,7 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.ArticleDetailActivity" />
         <activity android:name=".activity.LoginHistoriesActivity"></activity>
+        <activity android:name=".activity.CourseDetailActivity" />
 
         <service android:name=".service.CkccFirebaseInstanceIdService">
             <intent-filter>

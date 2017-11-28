@@ -30,6 +30,7 @@ import kh.edu.rupp.ckccapp.R;
 import kh.edu.rupp.ckccapp.fragment.ContactFragment;
 import kh.edu.rupp.ckccapp.fragment.NewsFragment;
 import kh.edu.rupp.ckccapp.fragment.ProfileFragment;
+import kh.edu.rupp.ckccapp.fragment.TrainingCoursesFragment;
 import kh.edu.rupp.ckccapp.model.App;
 
 /**
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (item.getItemId() == R.id.mnu_news) {
             onNewsClick();
             return true;
+        } else if (item.getItemId() == R.id.mnu_training_courses) {
+            onCoursesClick();
         } else if (item.getItemId() == R.id.mnu_profile) {
             onProfileClick();
             return true;
@@ -120,6 +123,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.lyt_content, newsFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void onCoursesClick() {
+        // Close drawer
+        drawerLayout.closeDrawers();
+
+        // Initalize NewsFragment
+        TrainingCoursesFragment coursesFragment = new TrainingCoursesFragment();
+
+        // Replace NewsFragment in container
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.lyt_content, coursesFragment);
         fragmentTransaction.commit();
     }
 
