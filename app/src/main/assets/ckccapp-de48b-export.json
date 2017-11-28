@@ -1,0 +1,50 @@
+{
+  "article" : [ null, {
+    "content" : "This is ICT Training course.",
+    "id" : 1,
+    "image" : "http://localhost/file/image/ch4.jpg",
+    "title" : "ICT Training Course",
+    "view_count" : 10
+  }, {
+    "content" : "This is taekwando training",
+    "id" : 2,
+    "image" : "http://localhost/file/image/ch2.jpg",
+    "title" : "Taekwando Training",
+    "view_count" : 50
+  } ],
+  "course" : [ null, {
+    "description" : "Java Application Development is designed to give a full view of android development in which response to the needs of job markets. The course will help you to build your own android application from scratch with professional level.",
+    "end_date" : "2017-12-31",
+    "id" : 1,
+    "image_url" : "http://test.js-cambodia.com/ckcc/image/android.png",
+    "start_date" : "2017-10-01",
+    "thumbnail_url" : "http://test.js-cambodia.com/ckcc/image/java.png",
+    "title" : "Mobile Development"
+  }, {
+    "description" : "IOS Application Development is designed to give a full view of IOS development in which response to the needs of job markets. The course will help you to build your own IOS application from the scratch with the profession of level.",
+    "end_date" : "2017-12-31",
+    "id" : 2,
+    "image_url" : "http://test.js-cambodia.com/ckcc/image/ios.png",
+    "start_date" : "2017-10-01",
+    "thumbnail_url" : "http://test.js-cambodia.com/ckcc/image/ios.png",
+    "title" : "iOS App Development (Advance)"
+  }, {
+    "description" : "Android app development.",
+    "end_date" : "2017-12-12",
+    "image_url" : "http://test.js-cambodia.com/ckcc/image/android.png",
+    "start_date" : "2017-12-12",
+    "thumbnail_url" : "http://test.js-cambodia.com/ckcc/image/android.png",
+    "title" : "Android App Development"
+  } ],
+  "user" : [ null, {
+    "active" : 1,
+    "password" : 123,
+    "profile_picture" : "http://",
+    "username" : "ckcc"
+  }, {
+    "active" : 1,
+    "password" : 321,
+    "profile_picture" : "http:/dfdsfd",
+    "username" : "rupp"
+  } ]
+}
