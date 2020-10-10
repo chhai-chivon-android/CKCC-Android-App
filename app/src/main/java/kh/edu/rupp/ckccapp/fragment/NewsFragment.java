@@ -51,7 +51,7 @@ public class NewsFragment extends Fragment {
         rclNews.setAdapter(articleAdapter);
 
         if(App.getInstance(getActivity()).getArticles() == null){
-            loadArticlesFromServer();
+            //loadArticlesFromServer();
         }else{
             Article[] articles = App.getInstance(getActivity()).getArticles();
             articleAdapter.setArticles(articles);

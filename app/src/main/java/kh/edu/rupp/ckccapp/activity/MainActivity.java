@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView txtLogout = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_logout);
         txtLogout.setOnClickListener(this);
 
-        displayProfileImage();
+        //displayProfileImage();
 
         onNewsClick();
 

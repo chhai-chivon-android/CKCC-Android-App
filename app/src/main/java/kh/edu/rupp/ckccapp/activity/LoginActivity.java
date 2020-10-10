@@ -110,12 +110,13 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
                 btnLogin.setVisibility(View.VISIBLE);
 
                 Gson gson = new Gson();
-                UserResponse userResponse = gson.fromJson(response, UserResponse.class);
-                if (userResponse.code < 0) {
+                //UserResponse userResponse = gson.fromJson(response, UserResponse.class);
+                //if (userResponse.code < 0) {
+                if (1 < 0) {
                     // Notify user for logining fail
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
                     alertDialog.setTitle("Login Fail");
-                    alertDialog.setMessage(userResponse.message);
+                    //alertDialog.setMessage(userResponse.message);
                     alertDialog.setPositiveButton("OK", null);
                     alertDialog.show();
                 } else {
@@ -127,11 +128,11 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
                 // Insert login history
                 long currentTime = System.currentTimeMillis();
-                boolean isSuccess = (userResponse.code == 0);
-                LoginHistory history = new LoginHistory(0, inputUsername, currentTime, isSuccess);
+                //boolean isSuccess = (userResponse.code == 0);
+                //LoginHistory history = new LoginHistory(0, inputUsername, currentTime, isSuccess);
 
-                DbManager dbManager = new DbManager(LoginActivity.this);
-                dbManager.insertLoginHistory(history);
+                //DbManager dbManager = new DbManager(LoginActivity.this);
+                //dbManager.insertLoginHistory(history);
 
             }
         }, new Response.ErrorListener() {

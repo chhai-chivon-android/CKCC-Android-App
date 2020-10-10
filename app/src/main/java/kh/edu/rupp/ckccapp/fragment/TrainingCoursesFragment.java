@@ -65,12 +65,18 @@ public class TrainingCoursesFragment extends Fragment implements ValueEventListe
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         Log.d("ckcc", "[Course Ref]onDataChange");
-        Course[] courses = new Course[(int)dataSnapshot.getChildrenCount()];
+        /*Course[] courses = new Course[(int)dataSnapshot.getChildrenCount()];
         int index = 0;
         for(DataSnapshot subSnapshot:dataSnapshot.getChildren()){
             Course course = subSnapshot.getValue(Course.class);
             courses[index] = course;
             index++;
+        }*/
+
+        Course[] courses = new  Course[10];
+        for (int i =0 ; i< 10 ; i++) {
+            Course course = new Course();
+            courses[i] = course;
         }
         courseAdapter.setCourses(courses);
     }
