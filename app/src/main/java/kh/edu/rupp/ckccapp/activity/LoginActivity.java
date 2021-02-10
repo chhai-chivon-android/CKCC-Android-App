@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.facebook.CallbackManager;
@@ -38,7 +37,16 @@ import kh.edu.rupp.ckccapp.R;
 import kh.edu.rupp.ckccapp.model.App;
 import kh.edu.rupp.ckccapp.model.DbManager;
 import kh.edu.rupp.ckccapp.model.LoginHistory;
+import kh.edu.rupp.ckccapp.model.LoginRequest;
+import kh.edu.rupp.ckccapp.model.LoginResponse;
 import kh.edu.rupp.ckccapp.model.UserResponse;
+import kh.edu.rupp.ckccapp.service.ApiClient;
+import kh.edu.rupp.ckccapp.service.SessionManager;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends Activity implements FacebookCallback<LoginResult>, OnCompleteListener<AuthResult> {
 
@@ -49,6 +57,11 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
     private CallbackManager callbackManager;
 
     private FirebaseAuth firebaseAuth;
+
+    private SessionManager sessionManager;
+
+    EditText etxtUsername;
+    EditText etxtPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +78,9 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
         setContentView(R.layout.activity_login);
 
+         etxtUsername = (EditText) findViewById(R.id.etxt_username);
+         etxtPassword = (EditText) findViewById(R.id.etxt_password);
+
         btnLogin = (Button) findViewById(R.id.btn_login);
         pgrLoading = (ProgressBar) findViewById(R.id.pgr_loading);
 
@@ -78,7 +94,52 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         // Firebase authentication
         firebaseAuth = FirebaseAuth.getInstance();
 
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
 
+        sessionManager = new SessionManager(this);
+        etxtUsername.setText("chivon.chhai");
+        etxtPassword.setText("P@ssw0rd");
+
+        btnLogin.setOnClickListener(v -> {
+            final String inputUsername = etxtUsername.getText().toString();
+            final String inputPassword = etxtPassword.getText().toString();
+            Log.d("inputUsername ", inputUsername);
+            Log.d("inputPassword ", inputPassword);
+            LoginRequest loginRequest = new LoginRequest(inputUsername,inputPassword);
+
+            ApiClient apiClient = new ApiClient();
+
+            String authorization = "Basic TE9BX0NMSUVOVF9JRDpMT0FfQ0xJRU5UX1NFQ1JFVA==";
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("grant_type", "password")
+                    .addFormDataPart("username", inputUsername)
+                    .addFormDataPart("password", inputPassword)
+                    .addFormDataPart("client_id", "LOA_CLIENT_ID")
+                    .addFormDataPart("client_secret", "LOA_CLIENT_SECRET")
+                    .addFormDataPart("latitude", "11.5657889")
+                    .addFormDataPart("longitude", "104.9202214")
+                    .addFormDataPart("device", "ANDROID")
+                    .addFormDataPart("deviceName", "iPhone")
+                    .addFormDataPart("macAddress", "AC-D5-64-BF-CD-31")
+                    .addFormDataPart("isForceLogin", "true")
+                    .build();
+            apiClient.getApiService().login(authorization,requestBody).enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    Log.d("Response ", response + "");
+                    Log.d("message ", response.message() + "");
+                    Log.d("body ", response.body() + "");
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+
+                }
+            });
+        });
     }
 
     @Override
@@ -93,63 +154,62 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         btnLogin.setVisibility(View.GONE);
         pgrLoading.setVisibility(View.VISIBLE);
 
-        EditText etxtUsername = (EditText) findViewById(R.id.etxt_username);
-        EditText etxtPassword = (EditText) findViewById(R.id.etxt_password);
 
-        final String inputUsername = etxtUsername.getText().toString();
-        final String inputPassword = etxtPassword.getText().toString();
+
+
+
 
         // Send username and password to Web Service
         //String loginUrl = "http://10.0.2.2/test/ckcc-api/login.php";
-        String loginUrl = "http://test.js-cambodia.com/ckcc/login.php";
-        StringRequest request = new StringRequest(Request.Method.POST, loginUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                pgrLoading.setVisibility(View.GONE);
-                btnLogin.setVisibility(View.VISIBLE);
-
-                Gson gson = new Gson();
-                //UserResponse userResponse = gson.fromJson(response, UserResponse.class);
-                //if (userResponse.code < 0) {
-                if (1 < 0) {
-                    // Notify user for logining fail
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-                    alertDialog.setTitle("Login Fail");
-                    //alertDialog.setMessage(userResponse.message);
-                    alertDialog.setPositiveButton("OK", null);
-                    alertDialog.show();
-                } else {
-                    // Start main activity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                // Insert login history
-                long currentTime = System.currentTimeMillis();
-                //boolean isSuccess = (userResponse.code == 0);
-                //LoginHistory history = new LoginHistory(0, inputUsername, currentTime, isSuccess);
-
-                //DbManager dbManager = new DbManager(LoginActivity.this);
-                //dbManager.insertLoginHistory(history);
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", inputUsername);
-                params.put("password", inputPassword);
-                return params;
-            }
-        };
-        App.getInstance(this).addRequest(request);
+//        String loginUrl = "http://test.js-cambodia.com/ckcc/login.php";
+//        StringRequest request = new StringRequest(Request.Method.POST, loginUrl, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                pgrLoading.setVisibility(View.GONE);
+//                btnLogin.setVisibility(View.VISIBLE);
+//
+//                Gson gson = new Gson();
+//                //UserResponse userResponse = gson.fromJson(response, UserResponse.class);
+//                //if (userResponse.code < 0) {
+//                if (1 < 0) {
+//                    // Notify user for logining fail
+//                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+//                    alertDialog.setTitle("Login Fail");
+//                    //alertDialog.setMessage(userResponse.message);
+//                    alertDialog.setPositiveButton("OK", null);
+//                    alertDialog.show();
+//                } else {
+//                    // Start main activity
+//                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//
+//                // Insert login history
+//                long currentTime = System.currentTimeMillis();
+//                //boolean isSuccess = (userResponse.code == 0);
+//                //LoginHistory history = new LoginHistory(0, inputUsername, currentTime, isSuccess);
+//
+//                //DbManager dbManager = new DbManager(LoginActivity.this);
+//                //dbManager.insertLoginHistory(history);
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("username", inputUsername);
+//                params.put("password", inputPassword);
+//                return params;
+//            }
+//        };
+//        App.getInstance(this).addRequest(request);
     }
 
     @Override

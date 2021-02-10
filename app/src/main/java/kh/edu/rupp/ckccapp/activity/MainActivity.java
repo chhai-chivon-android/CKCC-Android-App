@@ -1,5 +1,6 @@
 package kh.edu.rupp.ckccapp.activity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import de.hdodenhof.circleimageview.CircleImageView;
 import kh.edu.rupp.ckccapp.R;
 import kh.edu.rupp.ckccapp.fragment.ContactFragment;
+import kh.edu.rupp.ckccapp.fragment.HomeFragment;
 import kh.edu.rupp.ckccapp.fragment.NewsFragment;
 import kh.edu.rupp.ckccapp.fragment.ProfileFragment;
 import kh.edu.rupp.ckccapp.fragment.TrainingCoursesFragment;
@@ -68,28 +70,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView txtLogout = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txt_logout);
         txtLogout.setOnClickListener(this);
 
-        //displayProfileImage();
-
-        onNewsClick();
-
+        drawerLayout.closeDrawers();
+        NewsFragment newsFragment = new NewsFragment();
+        onMenuItemClickChange(newsFragment);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.mnu_news) {
-            onNewsClick();
+        if (item.getItemId() == R.id.mnu_home) {
+            drawerLayout.closeDrawers();
+            HomeFragment homeFragment = new HomeFragment();
+            onMenuItemClickChange(homeFragment);
+            return true;
+        } else if (item.getItemId() == R.id.mnu_news) {
+            drawerLayout.closeDrawers();
+            NewsFragment newsFragment = new NewsFragment();
+            onMenuItemClickChange(newsFragment);
             return true;
         } else if (item.getItemId() == R.id.mnu_training_courses) {
-            onCoursesClick();
+            drawerLayout.closeDrawers();
+            TrainingCoursesFragment coursesFragment = new TrainingCoursesFragment();
+            onMenuItemClickChange(coursesFragment);
+            return true;
         } else if (item.getItemId() == R.id.mnu_profile) {
-            onProfileClick();
+            drawerLayout.closeDrawers();
+            ProfileFragment profileFragment = new ProfileFragment();
+            onMenuItemClickChange(profileFragment);
             return true;
         } else if (item.getItemId() == R.id.mnu_contact) {
-            onContactClick();
+            drawerLayout.closeDrawers();
+            ContactFragment contactFragment = new ContactFragment();
+            onMenuItemClickChange(contactFragment);
             return true;
         }
-
         return false;
     }
 
@@ -112,59 +125,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         App.getInstance(this).addRequest(request);
     }
 
-    private void onNewsClick() {
-        // Close drawer
-        drawerLayout.closeDrawers();
-
-        // Initalize NewsFragment
-        NewsFragment newsFragment = new NewsFragment();
-
+    private void onMenuItemClickChange(Fragment fragment){
         // Replace NewsFragment in container
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.lyt_content, newsFragment);
-        fragmentTransaction.commit();
-    }
-
-    private void onCoursesClick() {
-        // Close drawer
-        drawerLayout.closeDrawers();
-
-        // Initalize NewsFragment
-        TrainingCoursesFragment coursesFragment = new TrainingCoursesFragment();
-
-        // Replace NewsFragment in container
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.lyt_content, coursesFragment);
-        fragmentTransaction.commit();
-    }
-
-    private void onProfileClick(){
-        // Close drawer
-        drawerLayout.closeDrawers();
-
-        // Initalize NewsFragment
-        ProfileFragment profileFragment = new ProfileFragment();
-
-        // Replace NewsFragment in container
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.lyt_content, profileFragment);
-        fragmentTransaction.commit();
-    }
-
-    private void onContactClick(){
-        // Close drawer
-        drawerLayout.closeDrawers();
-
-        // Initalize NewsFragment
-        ContactFragment contactFragment = new ContactFragment();
-
-        // Replace NewsFragment in container
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.lyt_content, contactFragment);
+        fragmentTransaction.replace(R.id.lyt_content, fragment);
         fragmentTransaction.commit();
     }
 
@@ -173,10 +138,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(view.getId() == R.id.txt_logout){
             // Logout from Facebook
             LoginManager.getInstance().logOut();
-
             // Logout from Firebase
             FirebaseAuth.getInstance().signOut();
-
             // Start login activity and finish main activity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -187,9 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void sendMessage(){
         Bundle bundle = null;
         RemoteMessage.Builder builder = new RemoteMessage.Builder("hello");
-
     }
-
 }
 
 

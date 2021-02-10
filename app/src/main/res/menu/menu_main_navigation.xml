@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/mnu_home"
+        android:checkable="true"
+        android:icon="@drawable/ic_news"
+        android:title="Home" />
+    <item
         android:id="@+id/mnu_news"
         android:checkable="true"
         android:icon="@drawable/ic_news"
