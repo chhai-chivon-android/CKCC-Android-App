@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtLogout.setOnClickListener(this);
 
         drawerLayout.closeDrawers();
-        NewsFragment newsFragment = new NewsFragment();
-        onMenuItemClickChange(newsFragment);
+        HomeFragment homeFragment = new HomeFragment();
+        onMenuItemClickChange(homeFragment);
     }
 
     @Override

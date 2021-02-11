@@ -70,11 +70,11 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         FacebookSdk.sdkInitialize(this);
 
         // Check if user is already logged in
-        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
         setContentView(R.layout.activity_login);
 
@@ -94,9 +94,9 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         // Firebase authentication
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
 
         sessionManager = new SessionManager(this);
         etxtUsername.setText("chivon.chhai");
@@ -126,7 +126,22 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
                     .addFormDataPart("macAddress", "AC-D5-64-BF-CD-31")
                     .addFormDataPart("isForceLogin", "true")
                     .build();
-            apiClient.getApiService().login(authorization,requestBody).enqueue(new Callback<LoginResponse>() {
+
+            Map<String, String> login = new HashMap<>();
+            login.put("grant_type", "password");
+            login.put("username", inputUsername);
+            login.put("password", inputPassword);
+            login.put("client_id", "LOA_CLIENT_ID");
+            login.put("client_secret", "LOA_CLIENT_SECRET");
+            login.put("latitude", "11.5657889");
+            login.put("longitude", "104.9202214");
+            login.put("device", "ANDROID");
+            login.put("deviceName", "iPhone");
+            login.put("macAddress", "AC-D5-64-BF-CD-31");
+            login.put("isForceLogin", "true");
+
+
+            apiClient.getApiService().login(login).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     Log.d("Response ", response + "");
@@ -136,7 +151,7 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                    Log.d(" Error ", t.getLocalizedMessage());
                 }
             });
         });
