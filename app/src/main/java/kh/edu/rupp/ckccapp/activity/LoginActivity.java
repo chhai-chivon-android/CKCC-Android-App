@@ -3,8 +3,10 @@ package kh.edu.rupp.ckccapp.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import kh.edu.rupp.ckccapp.R;
@@ -39,6 +42,7 @@ import kh.edu.rupp.ckccapp.model.DbManager;
 import kh.edu.rupp.ckccapp.model.LoginHistory;
 import kh.edu.rupp.ckccapp.model.LoginRequest;
 import kh.edu.rupp.ckccapp.model.LoginResponse;
+import kh.edu.rupp.ckccapp.model.Photo;
 import kh.edu.rupp.ckccapp.model.UserResponse;
 import kh.edu.rupp.ckccapp.service.ApiClient;
 import kh.edu.rupp.ckccapp.service.SessionManager;
@@ -94,9 +98,28 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         // Firebase authentication
         firebaseAuth = FirebaseAuth.getInstance();
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
+
+        ApiClient apiClient = new ApiClient();
+
+        apiClient.getApiService().loadPhotoFromServer().enqueue(new Callback<List<Photo>>() {
+            @Override
+            public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
+                Log.d("Response ", response + "");
+                Log.d("message ", response.message() + "");
+                Log.d("body ", response.body().toString()+ "");
+            }
+
+            @Override
+            public void onFailure(Call<List<Photo>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d(" Error ", t.getLocalizedMessage());
+            }
+        });
+
+
 
         sessionManager = new SessionManager(this);
         etxtUsername.setText("chivon.chhai");
@@ -109,7 +132,7 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
             Log.d("inputPassword ", inputPassword);
             LoginRequest loginRequest = new LoginRequest(inputUsername,inputPassword);
 
-            ApiClient apiClient = new ApiClient();
+
 
             String authorization = "Basic TE9BX0NMSUVOVF9JRDpMT0FfQ0xJRU5UX1NFQ1JFVA==";
             RequestBody requestBody = new MultipartBody.Builder()
@@ -141,9 +164,21 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
             login.put("isForceLogin", "true");
 
 
-            apiClient.getApiService().login(login).enqueue(new Callback<LoginResponse>() {
+            apiClient.getApiService().login("password",
+                    inputUsername,
+                    inputPassword,
+                    "LOA_CLIENT_ID",
+                    "LOA_CLIENT_SECRET",
+                    "11.5657889",
+                    "104.9202214",
+                    "ANDROID",
+                    "iPhone",
+                    "AC-D5-64-BF-CD-31",
+                    "true"
+                    ).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
                     Log.d("Response ", response + "");
                     Log.d("message ", response.message() + "");
                     Log.d("body ", response.body() + "");
@@ -151,6 +186,7 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    t.printStackTrace();
                     Log.d(" Error ", t.getLocalizedMessage());
                 }
             });

@@ -1,5 +1,6 @@
 package kh.edu.rupp.ckccapp.service;
 
+import java.io.IOException;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -10,7 +11,10 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import kh.edu.rupp.ckccapp.utils.Constants;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,7 +30,8 @@ public class ApiClient {
     public ApiService getApiService(){
         if(apiService == null){
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
+                    //.baseUrl(Constants.BASE_URL)
+                    .baseUrl("https://jsonplaceholder.typicode.com")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getUnsafeOkHttpClient().build())
                     .build();
@@ -64,6 +69,23 @@ public class ApiClient {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            builder.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain
+                            .request()
+                            .newBuilder()
+                            .addHeader("Content-Type", "application/json;charset=UTF-8")
+                            .addHeader("Language", "km")
+                            .addHeader("Device", "ANDROID")
+                            .addHeader("LoanId", "0")
+                            .addHeader("Authorization","Basic TE9BX0NMSUVOVF9JRDpMT0FfQ0xJRU5UX1NFQ1JFVA==")
+                            .build();
+                    return chain.proceed(request);
+                }
+            });
+
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
@@ -71,6 +93,7 @@ public class ApiClient {
                     return true;
                 }
             });
+
             return builder;
         } catch (Exception e) {
             throw new RuntimeException(e);
