@@ -31,7 +31,6 @@ public class HomeFragment extends Fragment {
 
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-
     private Integer [] images = {R.drawable.slide1,R.drawable.slide2,R.drawable.slide3};
 
     @Override
@@ -56,22 +55,14 @@ public class HomeFragment extends Fragment {
         dots = new ImageView[dotscount];
 
         for(int i = 0; i < dotscount; i++){
-
             dots[i] = new ImageView(context);
             dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.non_active_dot));
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
             params.setMargins(8, 0, 8, 0);
-
             sliderDotspanel.addView(dots[i], params);
-
         }
-
         dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.active_dot));
-
         NUM_PAGES =images.length;
-
         // Auto start of viewpager
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
