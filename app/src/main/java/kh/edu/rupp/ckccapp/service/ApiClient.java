@@ -1,6 +1,10 @@
 package kh.edu.rupp.ckccapp.service;
 
+import android.content.Context;
+
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -27,13 +31,12 @@ public class ApiClient {
 
     private static ApiService apiService = null;
 
-    public ApiService getApiService(){
+    public ApiService getApiService(Context context) {
         if(apiService == null){
             Retrofit retrofit = new Retrofit.Builder()
-                    //.baseUrl(Constants.BASE_URL)
-                    .baseUrl("https://jsonplaceholder.typicode.com")
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(getUnsafeOkHttpClient().build())
+                    .client(okHttpClient(context).build())
                     .build();
 
             apiService = retrofit.create(ApiService.class);
@@ -41,7 +44,7 @@ public class ApiClient {
         return apiService;
     }
 
-    public static OkHttpClient.Builder getUnsafeOkHttpClient() {
+    public static OkHttpClient.Builder okHttpClient(Context context) {
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -69,34 +72,14 @@ public class ApiClient {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-            builder.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request request = chain
-                            .request()
-                            .newBuilder()
-                            .addHeader("Content-Type", "application/json;charset=UTF-8")
-                            .addHeader("Language", "km")
-                            .addHeader("Device", "ANDROID")
-                            .addHeader("LoanId", "0")
-                            .addHeader("Authorization","Basic TE9BX0NMSUVOVF9JRDpMT0FfQ0xJRU5UX1NFQ1JFVA==")
-                            .build();
-                    return chain.proceed(request);
-                }
-            });
-
+            builder.addInterceptor(new AuthInterceptor(context));
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
             return builder;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }catch (KeyManagementException e){
+            e.printStackTrace();
         }
+        return null;
     }
 }

@@ -104,7 +104,7 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
 
         ApiClient apiClient = new ApiClient();
 
-        apiClient.getApiService().loadPhotoFromServer().enqueue(new Callback<List<Photo>>() {
+        apiClient.getApiService(this).loadPhotoFromServer().enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
                 Log.d("Response ", response + "");
@@ -118,8 +118,6 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
                 Log.d(" Error ", t.getLocalizedMessage());
             }
         });
-
-
 
         sessionManager = new SessionManager(this);
         etxtUsername.setText("chivon.chhai");
@@ -164,7 +162,7 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
             login.put("isForceLogin", "true");
 
 
-            apiClient.getApiService().login("password",
+            apiClient.getApiService(this).login("password",
                     inputUsername,
                     inputPassword,
                     "LOA_CLIENT_ID",
