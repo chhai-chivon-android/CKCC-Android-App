@@ -8,7 +8,7 @@ package kh.edu.rupp.ckccapp.utils;
 public class Constants {
 
     // Endpoints
-    public static final String BASE_URL = "https://loabe-sta.prasac.com.kh";
+    public static final String BASE_URL = "https://loabe.prasac.com.kh";
     public static final String LOGIN_URL = "/oauth/token";
 
 }

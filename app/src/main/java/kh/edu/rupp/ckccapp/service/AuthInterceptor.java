@@ -28,9 +28,9 @@ class AuthInterceptor implements Interceptor {
         Request.Builder requestBuilder = chain.request().newBuilder();
 
         // If token has been saved, add it to the request
-        if(!sessionManager.fetchAuthToken().isEmpty()) {
-            requestBuilder.addHeader("Authorization", "Bearer "+sessionManager.fetchAuthToken());
-        }
+//        if(sessionManager.fetchAuthToken() != null && !sessionManager.fetchAuthToken().isEmpty()) {
+//            requestBuilder.addHeader("Authorization", "Bearer "+sessionManager.fetchAuthToken());
+//        }
         requestBuilder.addHeader("Content-Type","application/json");
 
         return chain.proceed(requestBuilder.build());

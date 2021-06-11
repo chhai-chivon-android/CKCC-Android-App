@@ -98,30 +98,30 @@ public class LoginActivity extends Activity implements FacebookCallback<LoginRes
         // Firebase authentication
         firebaseAuth = FirebaseAuth.getInstance();
 
-//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
 
         ApiClient apiClient = new ApiClient();
 
-        apiClient.getApiService(this).loadPhotoFromServer().enqueue(new Callback<List<Photo>>() {
-            @Override
-            public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                Log.d("Response ", response + "");
-                Log.d("message ", response.message() + "");
-                Log.d("body ", response.body().toString()+ "");
-            }
-
-            @Override
-            public void onFailure(Call<List<Photo>> call, Throwable t) {
-                t.printStackTrace();
-                Log.d(" Error ", t.getLocalizedMessage());
-            }
-        });
+//        apiClient.getApiService(this).loadPhotoFromServer().enqueue(new Callback<List<Photo>>() {
+//            @Override
+//            public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
+//                Log.d("Response ", response + "");
+//                Log.d("message ", response.message() + "");
+//                Log.d("body ", response.body().toString()+ "");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Photo>> call, Throwable t) {
+//                t.printStackTrace();
+//                Log.d(" Error ", t.getLocalizedMessage());
+//            }
+//        });
 
         sessionManager = new SessionManager(this);
         etxtUsername.setText("chivon.chhai");
-        etxtPassword.setText("P@ssw0rd");
+        etxtPassword.setText("$Hello123");
 
         btnLogin.setOnClickListener(v -> {
             final String inputUsername = etxtUsername.getText().toString();

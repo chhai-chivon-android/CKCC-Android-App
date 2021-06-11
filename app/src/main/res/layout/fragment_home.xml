@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"/>
 
     <LinearLayout
+        android:id="@+id/llFaculty"
         android:layout_below="@+id/SliderDots"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,4 +34,46 @@
             android:layout_margin="8dp"/>
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/llBa"
+        android:layout_below="@+id/llFaculty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="បរិញ្ញាប័ត"
+            android:layout_margin="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llMs"
+        android:layout_below="@+id/llBa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="បរិញ្ញាប័តជាន់ខ្ពស់"
+            android:layout_margin="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDr"
+        android:layout_below="@+id/llMs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="បណ្ឌិត"
+            android:layout_margin="8dp"/>
+    </LinearLayout>
 </RelativeLayout>
